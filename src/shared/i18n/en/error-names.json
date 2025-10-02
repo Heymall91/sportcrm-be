@@ -1,0 +1,8 @@
+{
+  "BadRequestException": "Bad request exception",
+  "ForbiddenException": "Forbidden exception",
+  "ServerException": "Server exception",
+  "NotFoundException": "Not found exception",
+  "UnknownException": "Unknown exception",
+  "ConnectionException": "Connection exception"
+}

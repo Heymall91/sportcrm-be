@@ -1,0 +1,8 @@
+{
+  "BadRequestException": "Виняток поганого запиту",
+  "ForbiddenException": "Виняток заборони",
+  "ServerException": "Виняток серверу",
+  "NotFoundException": "Виняток не знайдено",
+  "UnknownException": "Невідомий виняток",
+  "ConnectionException": "Виняток підключення"
+}
