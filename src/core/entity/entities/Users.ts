@@ -1,11 +1,10 @@
-import { Column, Entity, OneToMany } from "typeorm";
+import { Column, CreateDateColumn, DeleteDateColumn, Entity, OneToMany, UpdateDateColumn, PrimaryGeneratedColumn } from "typeorm";
 import { ClubStaffs } from "./ClubStaffs";
 import { ClubStudents } from "./ClubStudents";
 
 @Entity("users", { schema: "sportcrm-be" })
 export class Users {
-  @Column("char", { primary: true, name: "id", length: 36 })
-  id: string;
+  @PrimaryGeneratedColumn("uuid") id: string;
 
   @Column("varchar", { name: "firstName", length: 255 })
   firstName: string;
@@ -25,13 +24,13 @@ export class Users {
   @Column("enum", { name: "gender", enum: ["male", "female"] })
   gender: "male" | "female";
 
-  @Column("datetime", { name: "createdAt" })
+  @CreateDateColumn()
   createdAt: Date;
 
-  @Column("datetime", { name: "updatedAt" })
+  @UpdateDateColumn()
   updatedAt: Date;
 
-  @Column("datetime", { name: "deletedAt", nullable: true })
+  @DeleteDateColumn()
   deletedAt: Date | null;
 
   @OneToMany(() => ClubStaffs, (clubStaffs) => clubStaffs.user)

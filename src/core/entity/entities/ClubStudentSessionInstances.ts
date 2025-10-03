@@ -1,4 +1,4 @@
-import { Column, Entity, Index, JoinColumn, ManyToOne } from "typeorm";
+import { Column, Entity, Index, JoinColumn, ManyToOne, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn, DeleteDateColumn } from "typeorm";
 import { ClubStudents } from "./ClubStudents";
 import { SessionInstances } from "./SessionInstances";
 
@@ -6,8 +6,7 @@ import { SessionInstances } from "./SessionInstances";
 @Index("sessionInstanceId", ["sessionInstanceId"], {})
 @Entity("club_student_session_instances", { schema: "sportcrm-be" })
 export class ClubStudentSessionInstances {
-  @Column("char", { primary: true, name: "id", length: 36 })
-  id: string;
+  @PrimaryGeneratedColumn('uuid') id: string;
 
   @Column("char", { name: "clubStudentId", nullable: true, length: 36 })
   clubStudentId: string | null;
@@ -15,13 +14,13 @@ export class ClubStudentSessionInstances {
   @Column("char", { name: "sessionInstanceId", nullable: true, length: 36 })
   sessionInstanceId: string | null;
 
-  @Column("datetime", { name: "createdAt" })
+  @CreateDateColumn()
   createdAt: Date;
-
-  @Column("datetime", { name: "updatedAt" })
+  
+  @UpdateDateColumn()
   updatedAt: Date;
-
-  @Column("datetime", { name: "deletedAt", nullable: true })
+  
+  @DeleteDateColumn()
   deletedAt: Date | null;
 
   @ManyToOne(

@@ -5,6 +5,10 @@ import {
   JoinColumn,
   ManyToOne,
   OneToMany,
+  PrimaryGeneratedColumn,
+  CreateDateColumn,
+  UpdateDateColumn,
+  DeleteDateColumn
 } from "typeorm";
 import { PaymentTargets } from "./PaymentTargets";
 import { ClubStudents } from "./ClubStudents";
@@ -12,8 +16,7 @@ import { ClubStudents } from "./ClubStudents";
 @Index("clubStudentId", ["clubStudentId"], {})
 @Entity("payments", { schema: "sportcrm-be" })
 export class Payments {
-  @Column("char", { primary: true, name: "id", length: 36 })
-  id: string;
+  @PrimaryGeneratedColumn("uuid") id: string;
 
   @Column("char", { name: "clubStudentId", nullable: true, length: 36 })
   clubStudentId: string | null;
@@ -24,13 +27,13 @@ export class Payments {
   @Column("enum", { name: "method", enum: ["cash", "card"] })
   method: "cash" | "card";
 
-  @Column("datetime", { name: "createdAt" })
+  @CreateDateColumn()
   createdAt: Date;
-
-  @Column("datetime", { name: "updatedAt" })
+  
+  @UpdateDateColumn()
   updatedAt: Date;
-
-  @Column("datetime", { name: "deletedAt", nullable: true })
+  
+  @DeleteDateColumn()
   deletedAt: Date | null;
 
   @OneToMany(() => PaymentTargets, (paymentTargets) => paymentTargets.payment)

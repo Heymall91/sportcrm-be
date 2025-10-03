@@ -5,6 +5,10 @@ import {
   JoinColumn,
   ManyToOne,
   OneToMany,
+  PrimaryGeneratedColumn,
+  CreateDateColumn,
+  UpdateDateColumn,
+  DeleteDateColumn
 } from "typeorm";
 import { SessionInstances } from "./SessionInstances";
 import { Sessions } from "./Sessions";
@@ -12,8 +16,7 @@ import { Sessions } from "./Sessions";
 @Index("sessionId", ["sessionId"], {})
 @Entity("session_schedules", { schema: "sportcrm-be" })
 export class SessionSchedules {
-  @Column("char", { primary: true, name: "id", length: 36 })
-  id: string;
+  @PrimaryGeneratedColumn("uuid") id: string;
 
   @Column("char", { name: "sessionId", nullable: true, length: 36 })
   sessionId: string | null;
@@ -39,14 +42,14 @@ export class SessionSchedules {
   @Column("varchar", { name: "dayOfWeekMask", nullable: true, length: 255 })
   dayOfWeekMask: string | null;
 
-  @Column("datetime", { name: "createdAt" })
+  @CreateDateColumn()
   createdAt: Date;
-
-  @Column("datetime", { name: "deletedAt", nullable: true })
-  deletedAt: Date | null;
-
-  @Column("datetime", { name: "updatedAt" })
+  
+  @UpdateDateColumn()
   updatedAt: Date;
+  
+  @DeleteDateColumn()
+  deletedAt: Date | null;
 
   @OneToMany(
     () => SessionInstances,

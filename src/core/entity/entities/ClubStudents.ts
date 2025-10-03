@@ -5,6 +5,10 @@ import {
   JoinColumn,
   ManyToOne,
   OneToMany,
+  PrimaryGeneratedColumn,
+  CreateDateColumn,
+  UpdateDateColumn,
+  DeleteDateColumn
 } from "typeorm";
 import { ClubStudentSessionInstances } from "./ClubStudentSessionInstances";
 import { ClubStudentSessions } from "./ClubStudentSessions";
@@ -17,8 +21,7 @@ import { SessionParticipants } from "./SessionParticipants";
 @Index("userId", ["userId"], {})
 @Entity("club_students", { schema: "sportcrm-be" })
 export class ClubStudents {
-  @Column("char", { primary: true, name: "id", length: 36 })
-  id: string;
+  @PrimaryGeneratedColumn("uuid") id: string;
 
   @Column("char", { name: "clubId", nullable: true, length: 36 })
   clubId: string | null;
@@ -29,13 +32,13 @@ export class ClubStudents {
   @Column("enum", { name: "status", enum: ["active", "inactive"] })
   status: "active" | "inactive";
 
-  @Column("datetime", { name: "createdAt" })
+  @CreateDateColumn()
   createdAt: Date;
-
-  @Column("datetime", { name: "updatedAt" })
+  
+  @UpdateDateColumn()
   updatedAt: Date;
-
-  @Column("datetime", { name: "deletedAt", nullable: true })
+  
+  @DeleteDateColumn()
   deletedAt: Date | null;
 
   @OneToMany(
