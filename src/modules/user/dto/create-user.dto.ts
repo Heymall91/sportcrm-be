@@ -1,9 +1,11 @@
 import {
+  IsNumber,
+  IsDateString,
   IsEmail,
   IsEnum,
   IsPhoneNumber,
   IsString,
-  IsStrongPassword,
+  IsStrongPassword
 } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 import { Gender } from '../entities/user.entity';
@@ -28,6 +30,18 @@ export class CreateUserDto {
   @ApiProperty()
   @IsStrongPassword()
   password: string;
+
+  @ApiProperty()
+  @IsString()
+  birthday: string;
+
+  @ApiProperty()
+  @IsNumber()
+  height: number;
+
+  @ApiProperty()
+  @IsNumber()
+  weight: number;
 
   @ApiProperty({ enum: Gender })
   @IsEnum(Gender, { message: 'Valid role required' })

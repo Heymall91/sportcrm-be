@@ -1,29 +1,29 @@
-import dotenv from 'dotenv';
-dotenv.config();
+import * as dotenv from 'dotenv';
+let cfg = dotenv.config({ path:  `.env.${process.env.NODE_ENV || 'dev'}` }).parsed;
 
 module.exports = {
   development: {
      dialect: "mysql",
-     host: process.env.DB_HOST,
-     port: process.env.DB_PORT,
-     username: process.env.DB_USERNAME,
-     password: process.env.DB_PASSWORD,
-     database: process.env.DB_NAME,
+     host: cfg.DB_HOST,
+     port: cfg.DB_PORT,
+     username: cfg.DB_USERNAME,
+     password: cfg.DB_PASSWORD,
+     database: cfg.DB_NAME,
   },
   test: {
      dialect: "mysql",
-     host: process.env.DB_HOST,
-     port: process.env.DB_PORT,
-     username: process.env.DB_USERNAME,
-     password: process.env.DB_PASSWORD,
-     database: process.env.DB_NAME,
+     host: cfg.DB_HOST,
+     port: cfg.DB_PORT,
+     username: cfg.DB_USERNAME,
+     password: cfg.DB_PASSWORD,
+     database: cfg.DB_NAME,
   },
   production: {
      dialect: "mysql",
-     host: process.env.DB_HOST,
-     port: process.env.DB_PORT,
-     username: process.env.DB_USERNAME,
-     password: process.env.DB_PASSWORD,
-     database: process.env.DB_NAME,
+     host: cfg.DB_HOST,
+     port: cfg.DB_PORT,
+     username: cfg.DB_USERNAME,
+     password: cfg.DB_PASSWORD,
+     database: cfg.DB_NAME,
   },
 }

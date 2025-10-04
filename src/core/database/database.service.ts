@@ -21,11 +21,11 @@ export const databaseProviders = [
     useFactory: async (configService: ConfigService) => {
       const sequelize = new Sequelize({
         dialect: 'mysql',
-        host: configService.get<string>('db.host'),
-        port: configService.get<number>('db.port'),
-        username: configService.get<string>('db.username'),
-        password: configService.get<string>('db.password'),
-        database: configService.get<string>('db.name'),
+        host: configService.get<string>('db.host') || 'localhost',
+        port: configService.get<number>('db.port') || 3306,
+        username: configService.get<string>('db.username') || 'root',
+        password: configService.get<string>('db.password') || 'newpassword',
+        database: configService.get<string>('db.name') || 'sportcrm',
       });
       sequelize.addModels([
         User,

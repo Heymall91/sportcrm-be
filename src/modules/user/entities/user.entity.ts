@@ -46,6 +46,15 @@ export class User extends Model<User> implements IUser {
   @Column(DataType.STRING)
   password: string;
 
+  @Column(DataType.STRING)
+  birthday: String;
+
+  @Column(DataType.FLOAT)
+  height: Number;
+
+  @Column(DataType.FLOAT)
+  weight: Number;
+
   @Column(DataType.ENUM('male', 'female'))
   gender: Gender;
 
