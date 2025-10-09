@@ -1,4 +1,4 @@
-import { Entity, Column, CreateDateColumn, UpdateDateColumn, PrimaryGeneratedColumn } from 'typeorm';
+import { Entity, Column, CreateDateColumn, DeleteDateColumn, UpdateDateColumn, PrimaryGeneratedColumn } from 'typeorm';
 
 enum GenderType{
     MALE="male",
@@ -19,8 +19,10 @@ export class User {
     @Column()
     phone: string;
 
-    @Column()
-    birthday: string;
+    @Column({
+        type: "date"
+    })
+    birthday: Date;
 
     @Column({
         type: 'enum',
@@ -39,4 +41,7 @@ export class User {
 
     @UpdateDateColumn()
     updatedAt: Date;
+
+    @DeleteDateColumn()
+    deletedAt: Date;
 }
