@@ -1,6 +1,6 @@
 import { Entity, Column, CreateDateColumn, DeleteDateColumn, UpdateDateColumn, PrimaryGeneratedColumn } from 'typeorm';
 
-enum GenderType{
+export enum GenderType{
     MALE="male",
     Female="female"
 }
