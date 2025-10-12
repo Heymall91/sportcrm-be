@@ -1,8 +1,9 @@
-import { Entity, Column, CreateDateColumn, DeleteDateColumn, UpdateDateColumn, PrimaryGeneratedColumn } from 'typeorm';
+import { Entity, Column, CreateDateColumn, DeleteDateColumn, UpdateDateColumn, PrimaryGeneratedColumn, ManyToMany, OneToMany } from 'typeorm';
+import { ClubStaff } from 'src/modules/club-staff/entities/club-staff.entity';
 
 export enum GenderType{
     MALE="male",
-    Female="female"
+    FEMALE="female"
 }
 
 @Entity()
@@ -36,6 +37,9 @@ export class User {
     @Column()
     weight: number;
 
+    @OneToMany(() => ClubStaff, clubStaff => clubStaff.user)
+    clubStaff: ClubStaff;
+
     @CreateDateColumn()
     createdAt: Date;
 
@@ -44,4 +48,5 @@ export class User {
 
     @DeleteDateColumn()
     deletedAt: Date;
+
 }

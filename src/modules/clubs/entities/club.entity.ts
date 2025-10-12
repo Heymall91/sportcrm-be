@@ -1,4 +1,6 @@
-import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn } from "typeorm";
+import { ClubStaff } from "src/modules/club-staff/entities/club-staff.entity";
+import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, OneToMany } from "typeorm";
+
 
 @Entity()
 export class Club {
@@ -7,6 +9,9 @@ export class Club {
 
     @Column()
     name: string;
+
+    @OneToMany(() => ClubStaff, clubStaff => clubStaff.club)
+    clubStaff: ClubStaff[];
 
     @CreateDateColumn()
     createdAt: Date;    

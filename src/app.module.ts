@@ -5,8 +5,10 @@ import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
+
 import { UsersModule } from './modules/users/users.module';
 import { ClubsModule } from './modules/clubs/clubs.module';
+import { ClubStaffModule } from './modules/club-staff/club-staff.module';
 
 @Module({
   imports: [TypeOrmModule.forRoot({
@@ -20,7 +22,8 @@ import { ClubsModule } from './modules/clubs/clubs.module';
     synchronize: true,
   }),
     UsersModule,
-    ClubsModule
+    ClubsModule,
+    ClubStaffModule
   ],
   controllers: [AppController],
   providers: [AppService],

@@ -9,7 +9,7 @@ import { Club } from './entities/club.entity';
 @Injectable()
 export class ClubsService {
 
-  constructor( @InjectRepository(Club)
+  constructor(@InjectRepository(Club)
     private readonly clubRepository: Repository<Club>
   ){}
 
