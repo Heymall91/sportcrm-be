@@ -1,13 +1,11 @@
 import * as dotenv from 'dotenv'
 dotenv.config()
+import { registerAs } from '@nestjs/config'
 
-export default () => ({
-    type: 'mysql',
-    host: process.env.DB_HOST,
-    port: process.env.PORT,
-    username: process.env.DB_USER,
-    password: process.env.DB_PASSWORD,
-    database: process.env.DB_NAME,
-    synchronize: true,
-    logging: true,
-})
+export default registerAs("app", () => ({
+    name: process.env.APP_NAME,
+    env: process.env.NODE_ENV,
+    port: parseInt(process.env.PORT || "3000", 10),
+    globalPrefix: process.env.GLOBAL_PREFIX,
+    version: process.env.APP_VERSION
+}))
