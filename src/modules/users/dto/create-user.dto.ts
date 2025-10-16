@@ -1,4 +1,4 @@
-import { IsString, IsNotEmpty, IsEnum, IsNumber } from 'class-validator';
+import { IsString, IsNotEmpty, IsEnum, IsNumber, Length, IsOptional } from 'class-validator';
 import { GenderType } from '../entities/user.entity';
 
 export class CreateUserDto {
@@ -12,6 +12,7 @@ export class CreateUserDto {
 
     @IsString()
     @IsNotEmpty()
+    @Length(9, 10)
     phone: string;
 
     @IsString()
@@ -21,12 +22,12 @@ export class CreateUserDto {
     @IsEnum(GenderType)
     gender: GenderType;
 
+    @IsOptional()
     @IsNumber()
-    @IsNotEmpty()
-    height: number;
+    height?: number;
 
+    @IsOptional()
     @IsNumber()
-    @IsNotEmpty()
-    weight: number;
+    weight?: number;
 
 }

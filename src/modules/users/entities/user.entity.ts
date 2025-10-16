@@ -17,7 +17,9 @@ export class User {
     @Column()
     lastName: string;
 
-    @Column()
+    @Column({
+        unique: true
+    })
     phone: string;
 
     @Column({
@@ -31,14 +33,14 @@ export class User {
     })
     gender: GenderType;
 
-    @Column()
+    @Column({type: 'int', nullable: true})
     height: number;
 
-    @Column()
+    @Column({type: 'int', nullable: true})
     weight: number;
 
     @OneToMany(() => ClubStaff, clubStaff => clubStaff.user)
-    clubStaff: ClubStaff;
+    clubStaff: ClubStaff[];
 
     @CreateDateColumn()
     createdAt: Date;
@@ -47,6 +49,6 @@ export class User {
     updatedAt: Date;
 
     @DeleteDateColumn()
-    deletedAt: Date;
+    deletedAt: Date | null;
 
 }
