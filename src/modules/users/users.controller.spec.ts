@@ -104,7 +104,7 @@ describe('UsersController', () => {
   // findOne
 
   describe('findOne', () => {
-    it('should return a user with UUID', async () => {
+    it('should return a users UUID', async () => {
       const userId = '550e8400-e29b-41d4-a716-446655440000';
       mockService.findOne.mockResolvedValue(mockUser);
 
@@ -119,37 +119,25 @@ describe('UsersController', () => {
   // // update
 
   describe('update', () => {
-    it('should update user first name', async () => {
-      const updateUserDto: UpdateUserDto = {
-        firstName: 'Nikanor',
-      };
+    it('should update an user account', async () => {
+      const userId = '550e8400-e29b-41d4-a716-446655440000';
+      const dto: UpdateUserDto = { firstName: 'Updated Name' };
+      const res = { userId, ...dto };
+      mockService.update.mockResolvedValue(res);
 
-      const updatedUser = { ...mockUser, firstName: 'Nikanor' };
-      mockService.update.mockResolvedValue(undefined);
-      mockService.findOne.mockResolvedValue(updatedUser);
-
-      const result = await controller.update(mockUser.id, updateUserDto);
-
-      expect(result.firstName).toBe('Nikanor');
-      expect(service.update).toHaveBeenCalledWith(mockUser.id, updateUserDto);
+      expect(await controller.update(userId, dto)).toBe(res);
+      expect(mockService.update).toHaveBeenCalledWith(userId, dto);
     });
-
   });
 
   describe('delete', () => {
     it('should delete a user', async () => {
-      const deletedUser = {
-        ...mockUser,
-        deletedAt: new Date('2025-10-16T12:00:00Z'),
-      };
-      mockService.delete.mockResolvedValue(deletedUser);
+      const userId = '550e8400-e29b-41d4-a716-446655440000';
+      const res = { deleted: true };
+      mockService.delete.mockResolvedValue(res);
 
-      const result = await controller.remove(mockUser.id);
-
-      expect(result.deletedAt).toBeDefined();
-      expect(result.deletedAt).toBeInstanceOf(Date);
-      expect(service.delete).toHaveBeenCalledWith(mockUser.id);
-      expect(service.delete).toHaveBeenCalledTimes(1);
+      expect(await controller.delete(userId)).toBe(res);
+      expect(mockService.delete).toHaveBeenCalledWith(userId);
     });
-  })
+  });
 });
