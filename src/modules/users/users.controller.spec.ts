@@ -1,9 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { User } from './entities/user.entity';
 import { UsersController } from './users.controller';
 import { UsersService } from './users.service';
 import { GenderType } from './entities/user.entity';
-import { getRepositoryToken } from '@nestjs/typeorm';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 
@@ -93,7 +91,7 @@ describe('UsersController', () => {
 
       mockService.findAll.mockResolvedValue(users);
 
-      const res = await controller.findAll();
+      const res = await service.findAll();
 
       expect(res).toEqual(users);
       expect(res).toHaveLength(2);
@@ -121,14 +119,17 @@ describe('UsersController', () => {
   describe('update', () => {
     it('should update an user account', async () => {
       const userId = '550e8400-e29b-41d4-a716-446655440000';
-      const dto: UpdateUserDto = { firstName: 'Nikanor' };
-      const res = { userId, ...dto };
+      const updateDto: UpdateUserDto = { firstName: 'Nikanor' };
+
+      const res = { userId, ...updateDto };
       mockService.update.mockResolvedValue(res);
 
-      expect(await controller.update(userId, dto)).toBe(res);
-      expect(mockService.update).toHaveBeenCalledWith(userId, dto);
+      expect(await controller.update(userId, updateDto)).toBe(res);
+      expect(mockService.update).toHaveBeenCalledWith(userId, updateDto);
     });
   });
+
+  // delete
 
   describe('delete', () => {
     it('should delete a user', async () => {

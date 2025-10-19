@@ -19,16 +19,16 @@ export class ClubStaffController {
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.clubStaffService.findOne(+id);
+    return this.clubStaffService.findOne(id);
   }
 
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateClubStaffDto: UpdateClubStaffDto) {
-    return this.clubStaffService.update(+id, updateClubStaffDto);
+    return this.clubStaffService.update(id, updateClubStaffDto);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.clubStaffService.remove(+id);
+  delete(@Param('id') id: string) {
+    return this.clubStaffService.remove(id);
   }
 }

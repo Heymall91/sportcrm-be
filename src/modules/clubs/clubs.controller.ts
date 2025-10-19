@@ -29,6 +29,6 @@ export class ClubsController {
 
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return this.clubsService.remove(id);
+    return this.clubsService.delete(id);
   }
 }

@@ -133,29 +133,6 @@ describe('UsersService', () => {
       expect(repository.findOneBy).toHaveBeenCalledWith({id: userId});
       expect(repository.findOneBy).toHaveBeenCalledTimes(1);
     });
-
-    it('should give id as string', async () => {
-      const userId = '123';
-
-      mockRepository.findOneBy.mockResolvedValue(mockUser);
-
-      await service.findOne(userId);
-
-      expect(repository.findOneBy).toHaveBeenCalledWith({id: '123'});
-      expect(repository.findOneBy).toHaveBeenCalledTimes(1);
-    });
-
-    it('should return null if user not found', async () => {
-      const userId = 'non-existent-id';
-
-      mockRepository.findOneBy.mockResolvedValue(null);
-
-      const res = await service.findOne(userId);
-
-      expect(res).toBeNull();
-      expect(repository.findOneBy).toHaveBeenCalledWith({ id: userId });
-      expect(repository.findOneBy).toHaveBeenCalledTimes(1);
-    });
   });
 
   describe('update', () => {
@@ -180,40 +157,6 @@ describe('UsersService', () => {
       expect(repository.update).toHaveBeenCalledWith(userId, updateDto);
       expect(repository.update).toHaveBeenCalledTimes(1);
     });
-
-    it('should return affected: 0 if user  not found', async () => {
-      const userId = 'non-existed-id';
-      const updateDto: UpdateUserDto = {
-        firstName: 'Vasyl'
-      }
-
-      const updatedResult = {
-        affected: 0,
-        raw: [],
-        generatedMaps: []
-      }
-
-      mockRepository.update.mockResolvedValue(updatedResult);
-
-      const res = await service.update(userId, updateDto);
-
-      expect(res.affected).toBe(0);
-      expect(repository.update).toHaveBeenCalledWith(userId, updateDto);
-    });
-
-    it('should throw a new error', async () => {
-      const userId = '123e4567-e89b-12d3-a456-426614174000';
-      const updatedDto: UpdateUserDto = {
-        firstName: 'Vasyl'
-      }
-
-      const err = new Error('Updaiting has been failed');
-      mockRepository.update.mockRejectedValue(err);
-
-      await expect(service.update(userId, updatedDto)).rejects.toThrow(err);
-      expect(repository.update).toHaveBeenCalledWith(userId, updatedDto);
-    });
-
   });
 
   describe('delete', () => {

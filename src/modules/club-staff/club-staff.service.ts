@@ -20,15 +20,15 @@ export class ClubStaffService {
     return this.clubStaffService.find()
   }
 
-  findOne(id: number) {
+  findOne(id: string) {
     return this.clubStaffService.findOneBy({id: String(id)})
   }
 
-  update(id: number, updateClubStaffDto: UpdateClubStaffDto) {
+  update(id: string, updateClubStaffDto: UpdateClubStaffDto) {
     return this.clubStaffService.update(id, updateClubStaffDto)
   }
 
-  remove(id: number) {
-    return this.clubStaffService.delete({id: String(id)})
+  remove(id: string) {
+    return this.clubStaffService.delete(id)
   }
 }

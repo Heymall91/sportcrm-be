@@ -29,7 +29,7 @@ export class ClubsService {
     return this.clubRepository.update(id, updateClubDto);
   }
 
-  remove(id: string) {
+  delete(id: string) {
     return this.clubRepository.delete(id);
   }
 }
