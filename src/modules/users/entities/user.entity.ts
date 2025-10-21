@@ -1,4 +1,4 @@
-import { Entity, Column, CreateDateColumn, DeleteDateColumn, UpdateDateColumn, PrimaryGeneratedColumn, ManyToMany, OneToMany } from 'typeorm';
+import { Entity, Column, CreateDateColumn, DeleteDateColumn, UpdateDateColumn, PrimaryGeneratedColumn, OneToMany } from 'typeorm';
 import { ClubStaff } from 'src/modules/club-staff/entities/club-staff.entity';
 
 export enum GenderType{

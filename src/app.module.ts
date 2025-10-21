@@ -1,17 +1,20 @@
 import * as dotenv from 'dotenv'
 dotenv.config()
 
+import * as path from 'path';
+
 import { Module } from '@nestjs/common';
 import Joi from 'joi';
-import { AppController } from './app.controller';
+// import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { TypeOrmModule, TypeOrmModuleOptions } from '@nestjs/typeorm';
+import { TypeOrmModule } from '@nestjs/typeorm';
 import { UsersModule } from './modules/users/users.module';
 import { ClubsModule } from './modules/clubs/clubs.module';
 import { ClubStaffModule } from './modules/club-staff/club-staff.module';
 import { ConfigModule } from '@nestjs/config';
 import { ConfigService } from '@nestjs/config';
 import dataBaseConfig from './config/database.config';
+import { I18nModule, AcceptLanguageResolver } from 'nestjs-i18n';
 
 
 @Module(
@@ -20,7 +23,6 @@ import dataBaseConfig from './config/database.config';
     ConfigModule.forRoot({
       cache: true,
       isGlobal: true,
-      envFilePath: `config/${process.env.NODE_ENV}.env`,
       load: [dataBaseConfig],
       validationSchema: Joi.object({
         DB_HOST: Joi.string().required(),
@@ -44,11 +46,20 @@ import dataBaseConfig from './config/database.config';
         synchronize: false,
       }),
     }),
+    I18nModule.forRoot({
+      fallbackLanguage: 'en',
+      loaderOptions: {
+        path: path.join(process.cwd(), 'src', 'shared', 'i18n'),
+        watch: true
+      },
+      resolvers: [
+        AcceptLanguageResolver
+      ]
+    }),
     UsersModule,
     ClubsModule,
     ClubStaffModule
   ],
-  controllers: [AppController],
   providers: [AppService],
 })
 export class AppModule {}
