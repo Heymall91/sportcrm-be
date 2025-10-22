@@ -35,7 +35,7 @@ import { Response } from "express";
         responseHandler<T>(response: T, i18n?: I18nContext){
             return {
                 data: response,
-                message: i18n ? i18n.t('succes-messages.Success', { lang: i18n.lang}) : 'Success'
+                message: i18n ? i18n.t('success-message.Success', { lang: i18n.lang}) : 'Success'
             }
         }
     }
