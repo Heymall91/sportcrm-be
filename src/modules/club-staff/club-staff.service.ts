@@ -13,15 +13,22 @@ export class ClubStaffService {
   ){}
 
   create(createClubStaffDto: CreateClubStaffDto) {
-    return this.clubStaffService.save(createClubStaffDto)
+    const clubStaff = this.clubStaffService.create({
+      club: {id: createClubStaffDto.clubId},
+      user: {id: createClubStaffDto.userId},
+      status: createClubStaffDto.status
+    });
+    return this.clubStaffService.save(clubStaff)
   }
 
   findAll() {
-    return this.clubStaffService.find()
+    return this.clubStaffService.find({
+      loadRelationIds: true
+    })
   }
 
   findOne(id: string) {
-    return this.clubStaffService.findOneBy({id: String(id)})
+    return this.clubStaffService.findOne({where: { id }, loadRelationIds: true});
   }
 
   update(id: string, updateClubStaffDto: UpdateClubStaffDto) {

@@ -22,7 +22,6 @@ import { I18nModule, AcceptLanguageResolver } from 'nestjs-i18n';
     ConfigModule.forRoot({
       cache: true,
       isGlobal: true,
-      envFilePath: `config/${process.env.NODE_ENV}.env`,
       load: [dataBaseConfig],
       validationSchema: Joi.object({
         DB_HOST: Joi.string().required(),
