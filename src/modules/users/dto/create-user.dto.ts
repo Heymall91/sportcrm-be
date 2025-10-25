@@ -6,6 +6,7 @@ export class CreateUserDto {
     @ApiProperty({example: 'c5d9367e-f6b4-41b0-a8e3-fe8d9c4e31ba', description: 'id'})
     id?: string;
 
+
     @ApiProperty({example: "Ivan", description: "First name"})
     @IsString()
     @IsNotEmpty()

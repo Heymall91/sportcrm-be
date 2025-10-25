@@ -6,6 +6,7 @@ import { ApiTags, ApiOperation, ApiResponse, ApiBody, ApiParam, ApiQuery } from 
 import { User } from './entities/user.entity';
 import { plainToInstance } from 'class-transformer';
 
+
 @ApiTags('users')
 @Controller('users')
 export class UsersController {
@@ -22,6 +23,7 @@ export class UsersController {
 
   @Get()
   @ApiOperation({summary: "Get a list of all user"})
+
   @ApiResponse({status: 200, type: [CreateUserDto]})
   @ApiResponse({status: 404, description: "Users not found"})
   findAll(): Promise<User[]> {
@@ -55,6 +57,6 @@ export class UsersController {
   @ApiResponse({ status: 404, description: "User not found" })
   @HttpCode(204)
   async delete(@Param('id', new ParseUUIDPipe()) id: string): Promise<void> {
-    return this.usersService.delete(id);
+    await this.usersService.delete(id);
   }
 }

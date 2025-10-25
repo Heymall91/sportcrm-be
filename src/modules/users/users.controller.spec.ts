@@ -137,7 +137,7 @@ describe('UsersController', () => {
       const res = { deleted: true };
       mockService.delete.mockResolvedValue(res);
 
-      expect(await controller.delete(userId)).toEqual(res);
+      await controller.delete(userId);
       expect(mockService.delete).toHaveBeenCalledWith(userId);
     });
   });
