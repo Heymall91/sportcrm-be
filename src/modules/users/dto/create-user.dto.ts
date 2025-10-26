@@ -42,9 +42,9 @@ export class CreateUserDto {
     @IsNumber()
     weight?: number;
 
-    @ApiProperty({ example: '2025-10-23T10:15:00Z', description: 'Дата создания записи' })
+    @ApiProperty({ example: '2025-10-23T10:15:00Z', description: 'Created at' })
     createdAt?: string;
 
-    @ApiProperty({ example: '2025-10-24T10:15:00Z', description: 'Дата последнего обновления' })
+    @ApiProperty({ example: '2025-10-24T10:15:00Z', description: 'Updated at' })
     updatedAt?: string;
 }

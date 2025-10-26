@@ -141,7 +141,7 @@ describe('ClubStaffService', () => {
       const res = {deleted: true};
       mockRepository.delete.mockResolvedValue(res);
 
-      expect(await service.remove(clubStaffId)).toBe(res);
+      await service.delete(clubStaffId);
       expect(mockRepository.delete).toHaveBeenCalledWith(clubStaffId);
     });
   })

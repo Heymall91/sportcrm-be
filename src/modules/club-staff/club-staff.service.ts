@@ -1,7 +1,7 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { ClubStaff } from './entities/club-staff.entity';
-import { Repository } from 'typeorm';
+import { DeleteResult, Repository } from 'typeorm';
 import { CreateClubStaffDto } from './dto/create-club-staff.dto';
 import { UpdateClubStaffDto } from './dto/update-club-staff.dto';
 
@@ -27,15 +27,29 @@ export class ClubStaffService {
     })
   }
 
-  findOne(id: string) {
-    return this.clubStaffService.findOne({where: { id }, loadRelationIds: true});
+  async findOne(id: string): Promise<ClubStaff> {
+    const clubStaff = await this.clubStaffService.findOne({where: { id }, loadRelationIds: true})
+    if(!clubStaff){
+      throw new NotFoundException(`Club staff with this ID ${id} not found`)
+    }
+
+    return clubStaff;
   }
 
-  update(id: string, updateClubStaffDto: UpdateClubStaffDto) {
-    return this.clubStaffService.update(id, updateClubStaffDto)
+  async update(id: string, updateClubStaffDto: UpdateClubStaffDto): Promise<ClubStaff> {
+    await this.clubStaffService.update(id, updateClubStaffDto);
+    const clubStaff = await this.clubStaffService.findOne({where: {id}});
+    if(!clubStaff){
+      throw new NotFoundException(`Club staff with this ID ${id} not found`)
+    }
+    return clubStaff;
   }
 
-  remove(id: string) {
-    return this.clubStaffService.delete(id)
+  async delete(id: string): Promise<DeleteResult> {
+    const res = await this.clubStaffService.delete(id);
+    if(res.affected === 0){
+      throw new NotFoundException(`Club staff with ID ${id} not found`);
+    }
+    return res;
   }
 }

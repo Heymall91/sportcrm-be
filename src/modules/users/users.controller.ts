@@ -2,7 +2,7 @@ import { Controller, Get, Post, Body, Patch, Param, Delete, ValidationPipe, UseP
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { ApiTags, ApiOperation, ApiResponse, ApiBody, ApiParam, ApiQuery } from '@nestjs/swagger';
+import { ApiTags, ApiOperation, ApiResponse, ApiBody, ApiParam } from '@nestjs/swagger';
 import { User } from './entities/user.entity';
 import { plainToInstance } from 'class-transformer';
 
@@ -16,14 +16,13 @@ export class UsersController {
   @ApiOperation({summary: "Create a new user"})
   @ApiBody({type: CreateUserDto})
   @ApiResponse({status: 200, description: "User has been created"})
-  @ApiResponse({status: 503, description: "Bad request"})
+  @ApiResponse({status: 400, description: "Bad request"})
   create(@Body() createUserDto: CreateUserDto): Promise<User> {
     return this.usersService.create(createUserDto);
   }
 
   @Get()
-  @ApiOperation({summary: "Get a list of all user"})
-
+  @ApiOperation({summary: "Get a list of all users"})
   @ApiResponse({status: 200, type: [CreateUserDto]})
   @ApiResponse({status: 404, description: "Users not found"})
   findAll(): Promise<User[]> {
