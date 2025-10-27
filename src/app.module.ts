@@ -1,11 +1,10 @@
 import * as dotenv from 'dotenv'
-dotenv.config()
+dotenv.config();
 
 import * as path from 'path';
 
 import { Module } from '@nestjs/common';
 import Joi from 'joi';
-// import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { UsersModule } from './modules/users/users.module';
@@ -43,7 +42,7 @@ import { I18nModule, AcceptLanguageResolver } from 'nestjs-i18n';
         password: config.get<string>('database.password'),
         database: config.get<string>('database.name'),
         autoLoadEntities: true,
-        synchronize: false,
+        synchronize: false
       }),
     }),
     I18nModule.forRoot({
@@ -60,6 +59,7 @@ import { I18nModule, AcceptLanguageResolver } from 'nestjs-i18n';
     ClubsModule,
     ClubStaffModule
   ],
+  controllers: [],
   providers: [AppService],
 })
 export class AppModule {}

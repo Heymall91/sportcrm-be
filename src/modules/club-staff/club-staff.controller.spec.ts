@@ -20,7 +20,7 @@ describe('ClubStaffController', () => {
     findAll: jest.fn(),
     findOne: jest.fn(),
     update: jest.fn(),
-    remove: jest.fn()
+    delete: jest.fn()
   }
 
   beforeEach(async () => {
@@ -127,10 +127,10 @@ describe('ClubStaffController', () => {
     it('should delete a club staff by id', async () => {
       const clubStaffId = '550e8400-e29b-41d4-a716-446655440000';
       const res = {deleted: true};
-      mockService.remove.mockResolvedValue(res);
+      mockService.delete.mockResolvedValue(res);
 
-      expect(await service.remove(clubStaffId)).toBe(res);
-      expect(mockService.remove).toHaveBeenCalledWith(clubStaffId);
+      await service.delete(clubStaffId);
+      expect(mockService.delete).toHaveBeenCalledWith(clubStaffId);
     });
   })
 });

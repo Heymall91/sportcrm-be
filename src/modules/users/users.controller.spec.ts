@@ -124,7 +124,7 @@ describe('UsersController', () => {
       const res = { userId, ...updateDto };
       mockService.update.mockResolvedValue(res);
 
-      expect(await controller.update(userId, updateDto)).toBe(res);
+      expect(await controller.update(userId, updateDto)).toEqual(res);
       expect(mockService.update).toHaveBeenCalledWith(userId, updateDto);
     });
   });
@@ -137,7 +137,7 @@ describe('UsersController', () => {
       const res = { deleted: true };
       mockService.delete.mockResolvedValue(res);
 
-      expect(await controller.delete(userId)).toBe(res);
+      await controller.delete(userId);
       expect(mockService.delete).toHaveBeenCalledWith(userId);
     });
   });

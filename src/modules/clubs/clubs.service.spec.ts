@@ -35,6 +35,7 @@ describe('ClubsService', () => {
   const mockRepository = {
     save: jest.fn(),
     findAll: jest.fn(),
+    findOne: jest.fn(),
     find: jest.fn(),
     findOneBy: jest.fn(),
     update: jest.fn(),
@@ -102,13 +103,13 @@ describe('ClubsService', () => {
   describe('findOne', () => {
     it('should return club by id', async () => {
       const clubId = "6f736536-3756-4c3e-875e-510b9a4a20e0";
-      mockRepository.findOneBy.mockResolvedValue(mockClub);
+      const mockClub = { id: clubId, name: "Secret club"}
 
+      mockRepository.findOne.mockResolvedValue(mockClub);
       const res = await service.findOne(clubId);
 
       expect(res).toEqual(mockClub);
-      expect(mockRepository.findOneBy).toHaveBeenCalledWith({id: clubId});
-      expect(mockRepository.findOneBy).toHaveBeenCalledTimes(1);
+      expect(mockRepository.findOne).toHaveBeenCalledWith({where: { id: clubId}});
     })
   })
 
@@ -121,19 +122,28 @@ describe('ClubsService', () => {
         name: "Secret Club"
       };
 
-      const updatedResult = {
+      const updatedRes = {
         affected: 1,
         raw: [],
         generatedMaps: []
       };
 
-      mockRepository.update.mockResolvedValue(updatedResult);
+      const updatedClub = {
+        id: clubId,
+        name: "Secret Club",
+        createdAt: new Date('2025-10-23T10:15:00Z'),
+        updatedAt: new Date('2025-10-23T10:15:00Z')
+      }
+
+      mockRepository.update.mockResolvedValue(updatedRes);
+      mockRepository.findOne.mockResolvedValue(updatedClub)
 
       const res = await service.update(clubId, updateDto);
       
-      expect(res).toEqual(updatedResult);
+      expect(res).toEqual(updatedClub);
       expect(mockRepository.update).toHaveBeenCalledWith(clubId, updateDto);
       expect(mockRepository.update).toHaveBeenCalledTimes(1);
+      expect(mockRepository.findOne).toHaveBeenCalledWith({where: {id: clubId} })
     })
   })
 

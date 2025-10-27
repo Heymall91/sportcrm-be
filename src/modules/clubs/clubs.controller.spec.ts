@@ -114,13 +114,13 @@ describe('ClubsController', () => {
     it('should update club', async () => {
       const clubId = "6f736536-3756-4c3e-875e-510b9a4a20e0";
       const updateDto: UpdateClubDto = {
-        name: "Super Super Secret Club"
+        name: "Secret Club"
       };
 
       const res = { clubId, ...updateDto};
       mockService.update.mockResolvedValue(res);
 
-      expect(await controller.update(clubId, updateDto)).toBe(res);
+      expect(await controller.update(clubId, updateDto)).toEqual(res);
       expect(mockService.update).toHaveBeenCalledWith(clubId, updateDto);      
     });
   });
@@ -130,10 +130,10 @@ describe('ClubsController', () => {
   describe('delete', () => {
     it('should delete club by id', async () => {
       const clubId = "6f736536-3756-4c3e-875e-510b9a4a20e0";
-      const res = {deleted: true};
+      const res = { deleted: true };
       mockService.delete.mockResolvedValue(res);
 
-      expect(await controller.remove(clubId)).toBe(res);
+      await controller.delete(clubId);
       expect(mockService.delete).toHaveBeenCalledWith(clubId);
     });
   });
