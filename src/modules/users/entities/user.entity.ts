@@ -1,54 +1,72 @@
-import { Entity, Column, CreateDateColumn, DeleteDateColumn, UpdateDateColumn, PrimaryGeneratedColumn, ManyToMany, OneToMany } from 'typeorm';
+import {
+  Entity,
+  Column,
+  CreateDateColumn,
+  DeleteDateColumn,
+  UpdateDateColumn,
+  PrimaryGeneratedColumn,
+  OneToMany,
+} from 'typeorm';
 import { ClubStaff } from 'src/modules/club-staff/entities/club-staff.entity';
 
-export enum GenderType{
-    MALE="male",
-    FEMALE="female"
+export enum GenderType {
+  MALE = 'male',
+  FEMALE = 'female',
 }
 
 @Entity()
 export class User {
-    @PrimaryGeneratedColumn('uuid')
-    id: string;
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
 
-    @Column()
-    firstName: string;
+  @Column({nullable: true})
+  auth0ID: string;
 
-    @Column()
-    lastName: string;
+  @Column()
+  firstName: string;
 
-    @Column({
-        unique: true
-    })
-    phone: string;
+  @Column()
+  lastName: string;
 
-    @Column({
-        type: "date"
-    })
-    birthday: Date;
+  @Column()
+  email: string;
 
-    @Column({
-        type: 'enum',
-        enum: GenderType
-    })
-    gender: GenderType;
+  @Column({
+    unique: true,
+  })
+  phone: string;
 
-    @Column({type: 'int', nullable: true})
-    height: number;
+  @Column({
+    type: 'boolean',
+  })
+  isRegistrationCompleted: boolean;
 
-    @Column({type: 'int', nullable: true})
-    weight: number;
+  @Column({
+    type: 'date',
+  })
+  birthday: Date;
 
-    @OneToMany(() => ClubStaff, clubStaff => clubStaff.user)
-    clubStaff: ClubStaff[];
+  @Column({
+    type: 'enum',
+    enum: GenderType,
+  })
+  gender: GenderType;
 
-    @CreateDateColumn()
-    createdAt: Date;
+  @Column({ type: 'int', nullable: true })
+  height: number;
 
-    @UpdateDateColumn()
-    updatedAt: Date;
+  @Column({ type: 'int', nullable: true })
+  weight: number;
 
-    @DeleteDateColumn()
-    deletedAt: Date | null;
+  @OneToMany(() => ClubStaff, (clubStaff) => clubStaff.user)
+  clubStaff: ClubStaff[];
 
+  @CreateDateColumn()
+  createdAt: Date;
+
+  @UpdateDateColumn()
+  updatedAt: Date;
+
+  @DeleteDateColumn()
+  deletedAt: Date | null;
 }

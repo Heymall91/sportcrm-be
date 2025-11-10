@@ -12,19 +12,20 @@ async function bootstrap() {
   const port = configService.get<number>('PORT');
 
   const config = new DocumentBuilder()
-  .setTitle('SportCRM description')
-  .setDescription("SportCRM-system API description")
-  .setVersion('1.0')
-  .addTag('sportcrm')
-  .build();
+    .setTitle('SportCRM description')
+    .setDescription('SportCRM-system API description')
+    .setVersion('1.0')
+    .addTag('sportcrm')
+    .build();
   const documentFactory = () => SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, documentFactory, {
-    jsonDocumentUrl: 'swagger/json'
+    jsonDocumentUrl: 'swagger/json',
   });
 
   app.useGlobalInterceptors(new ResponseInterceptor());
   app.useGlobalPipes(new ValidationPipe({ transform: true }));
-  app.enableCors();
+  const frontendOrigin = configService.get('FRONTEND_ORIGIN');
+  app.enableCors({ origin: frontendOrigin, credentials: true });
   await app.listen(port ?? 3000);
 }
 bootstrap();

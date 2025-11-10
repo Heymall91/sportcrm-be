@@ -5,13 +5,12 @@ import { Repository, DeleteResult } from 'typeorm';
 import { User } from './entities/user.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 
-
 @Injectable()
 export class UsersService {
-
   constructor(
     @InjectRepository(User)
-    private usersRepository: Repository<User>) { }
+    private usersRepository: Repository<User>,
+  ) {}
 
   create(createUserDto: CreateUserDto) {
     return this.usersRepository.save(createUserDto);
@@ -33,7 +32,7 @@ export class UsersService {
     await this.usersRepository.update(id, updateUserDto);
     const user = await this.usersRepository.findOne({ where: { id } });
     if (!user) {
-      throw new NotFoundException(`User with ID ${id} not found`)
+      throw new NotFoundException(`User with ID ${id} not found`);
     }
 
     return user;

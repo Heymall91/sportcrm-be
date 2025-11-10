@@ -8,10 +8,10 @@ import { Club } from './entities/club.entity';
 
 @Injectable()
 export class ClubsService {
-
-  constructor(@InjectRepository(Club)
-    private readonly clubRepository: Repository<Club>
-  ){}
+  constructor(
+    @InjectRepository(Club)
+    private readonly clubRepository: Repository<Club>,
+  ) {}
 
   create(createClubDto: CreateClubDto) {
     return this.clubRepository.save(createClubDto);
@@ -22,8 +22,8 @@ export class ClubsService {
   }
 
   async findOne(id: string): Promise<Club> {
-    const club = await this.clubRepository.findOne({where: {id}});
-    if(!club){
+    const club = await this.clubRepository.findOne({ where: { id } });
+    if (!club) {
       throw new NotFoundException(`Club with this ID ${id} doesn't found`);
     }
     return club;
@@ -32,7 +32,7 @@ export class ClubsService {
   async update(id: string, updateClubDto: UpdateClubDto): Promise<Club> {
     await this.clubRepository.update(id, updateClubDto);
     const club = await this.clubRepository.findOne({ where: { id } });
-    if(!club){
+    if (!club) {
       throw new NotFoundException(`Club with this ID ${id} doesn't found`);
     }
 
@@ -41,10 +41,10 @@ export class ClubsService {
 
   async delete(id: string): Promise<DeleteResult> {
     const res = await this.clubRepository.delete(id);
-    if(res.affected === 0){
-      throw new NotFoundException(`User with ID ${id} not found`)
+    if (res.affected === 0) {
+      throw new NotFoundException(`User with ID ${id} not found`);
     }
-    
+
     return res;
   }
 }

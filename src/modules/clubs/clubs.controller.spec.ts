@@ -9,11 +9,11 @@ describe('ClubsController', () => {
   let service: ClubsService;
 
   const mockClub = {
-    id: "6f736536-3756-4c3e-875e-510b9a4a20e0",
-    name: "Secret Club",
-    createdAt: "2025-10-10T06:06:58.716Z",
-    updatedAt: "2025-10-10T06:06:58.716Z"
-  }
+    id: '6f736536-3756-4c3e-875e-510b9a4a20e0',
+    name: 'Secret Club',
+    createdAt: '2025-10-10T06:06:58.716Z',
+    updatedAt: '2025-10-10T06:06:58.716Z',
+  };
 
   const mockService = {
     create: jest.fn(),
@@ -21,17 +21,18 @@ describe('ClubsController', () => {
     findOne: jest.fn(),
     update: jest.fn(),
     delete: jest.fn(),
-    remove: jest.fn()
-  }
+    remove: jest.fn(),
+  };
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       controllers: [ClubsController],
-      providers: [ClubsService,
+      providers: [
+        ClubsService,
         {
           provide: ClubsService,
-          useValue: mockService
-        }
+          useValue: mockService,
+        },
       ],
     }).compile();
 
@@ -50,11 +51,10 @@ describe('ClubsController', () => {
   // create
 
   describe('create', () => {
-
     it('should create a new club', async () => {
       const createClubDto: CreateClubDto = {
-        name: "Secret Club"
-      }
+        name: 'Secret Club',
+      };
 
       mockService.create.mockResolvedValue(mockClub);
 
@@ -64,7 +64,6 @@ describe('ClubsController', () => {
       expect(service.create).toHaveBeenCalledWith(createClubDto);
       expect(service.create).toHaveBeenCalledTimes(1);
     });
-
   });
 
   // find all
@@ -75,16 +74,16 @@ describe('ClubsController', () => {
         mockClub,
         {
           ...mockClub,
-          id: "6f736536-3756-4c3e-875e-510b9a4a26g9",
-          name: "Super Secret Club",
-          createdAt: "2025-10-10T06:06:58.716Z",
-          updatedAt: "2025-10-10T06:06:58.716Z"
-        }
+          id: '6f736536-3756-4c3e-875e-510b9a4a26g9',
+          name: 'Super Secret Club',
+          createdAt: '2025-10-10T06:06:58.716Z',
+          updatedAt: '2025-10-10T06:06:58.716Z',
+        },
       ];
 
       mockService.findAll.mockResolvedValue(clubs);
 
-      const res = await controller.findAll()
+      const res = await controller.findAll();
 
       expect(res).toEqual(clubs);
       expect(res).toHaveLength(2);
@@ -96,7 +95,7 @@ describe('ClubsController', () => {
 
   describe('findOne', () => {
     it('should return the club by id', async () => {
-      const clubId = "6f736536-3756-4c3e-875e-510b9a4a20e0"
+      const clubId = '6f736536-3756-4c3e-875e-510b9a4a20e0';
 
       mockService.findOne.mockResolvedValue(mockClub);
 
@@ -112,16 +111,16 @@ describe('ClubsController', () => {
 
   describe('update', () => {
     it('should update club', async () => {
-      const clubId = "6f736536-3756-4c3e-875e-510b9a4a20e0";
+      const clubId = '6f736536-3756-4c3e-875e-510b9a4a20e0';
       const updateDto: UpdateClubDto = {
-        name: "Secret Club"
+        name: 'Secret Club',
       };
 
-      const res = { clubId, ...updateDto};
+      const res = { clubId, ...updateDto };
       mockService.update.mockResolvedValue(res);
 
       expect(await controller.update(clubId, updateDto)).toEqual(res);
-      expect(mockService.update).toHaveBeenCalledWith(clubId, updateDto);      
+      expect(mockService.update).toHaveBeenCalledWith(clubId, updateDto);
     });
   });
 
@@ -129,7 +128,7 @@ describe('ClubsController', () => {
 
   describe('delete', () => {
     it('should delete club by id', async () => {
-      const clubId = "6f736536-3756-4c3e-875e-510b9a4a20e0";
+      const clubId = '6f736536-3756-4c3e-875e-510b9a4a20e0';
       const res = { deleted: true };
       mockService.delete.mockResolvedValue(res);
 

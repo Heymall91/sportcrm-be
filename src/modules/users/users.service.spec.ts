@@ -10,7 +10,7 @@ import { GenderType } from './entities/user.entity';
 
 describe('UsersService', () => {
   let service: UsersService;
-  let repository: Repository<User>
+  let repository: Repository<User>;
 
   // mocks
 
@@ -28,7 +28,7 @@ describe('UsersService', () => {
     deletedAt: null,
   };
 
-   const mockUserArray = [
+  const mockUserArray = [
     mockUser,
     {
       id: '123e4567-e89b-12d3-a456-426614174001',
@@ -54,32 +54,32 @@ describe('UsersService', () => {
     update: jest.fn(),
     delete: jest.fn(),
     findOne: jest.fn(),
-    findOneBy: jest.fn()
-  }
+    findOneBy: jest.fn(),
+  };
 
-  beforeEach( async () => {
+  beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         UsersService,
         {
           provide: getRepositoryToken(User),
-          useValue: mockRepository
-        }
+          useValue: mockRepository,
+        },
       ],
-      controllers: [UsersController]
+      controllers: [UsersController],
     }).compile();
 
     service = module.get<UsersService>(UsersService);
     repository = module.get<Repository<User>>(getRepositoryToken(User));
-  })
+  });
 
   afterEach(() => {
-    jest.clearAllMocks()
+    jest.clearAllMocks();
   });
 
   it('should be defined', () => {
-    expect(service).toBeDefined()
-  })
+    expect(service).toBeDefined();
+  });
 
   // create
 
@@ -117,8 +117,7 @@ describe('UsersService', () => {
       expect(mockRepository.find).toHaveBeenCalled();
       expect(mockRepository.find).toHaveBeenCalledTimes(1);
     });
-
-  })
+  });
 
   // find one
 
@@ -131,47 +130,51 @@ describe('UsersService', () => {
       const res = await service.findOne(userId);
 
       expect(res).toEqual(mockUser);
-      expect(mockRepository.findOne).toHaveBeenCalledWith({ where: { id: userId } });
+      expect(mockRepository.findOne).toHaveBeenCalledWith({
+        where: { id: userId },
+      });
     });
   });
 
   describe('update', () => {
-  it('should update a user', async () => {
-    const userId = '123e4567-e89b-12d3-a456-426614174000';
-    const updateDto: UpdateUserDto = {
-      firstName: 'Vasyl Updated',
-      lastName: 'Pyrig Updated'
-    };
+    it('should update a user', async () => {
+      const userId = '123e4567-e89b-12d3-a456-426614174000';
+      const updateDto: UpdateUserDto = {
+        firstName: 'Vasyl Updated',
+        lastName: 'Pyrig Updated',
+      };
 
-    const updateResult = {
-      affected: 1,
-      raw: [],
-      generatedMaps: []
-    };
+      const updateResult = {
+        affected: 1,
+        raw: [],
+        generatedMaps: [],
+      };
 
-    const updatedUser = {
-      id: userId,
-      firstName: 'Vasyl Updated',
-      lastName: 'Pyrig Updated',
-      phone: '+1234567890',
-      birthday: new Date('1990-01-01'),
-      gender: 'male',
-      height: 180,
-      weight: 75,
-      createdAt: new Date('2025-10-25T08:56:05.430Z'),
-      updatedAt: new Date('2025-10-25T08:56:05.430Z'),
-      deletedAt: null,
-    };
+      const updatedUser = {
+        id: userId,
+        firstName: 'Vasyl Updated',
+        lastName: 'Pyrig Updated',
+        phone: '+1234567890',
+        birthday: new Date('1990-01-01'),
+        gender: 'male',
+        height: 180,
+        weight: 75,
+        createdAt: new Date('2025-10-25T08:56:05.430Z'),
+        updatedAt: new Date('2025-10-25T08:56:05.430Z'),
+        deletedAt: null,
+      };
 
-    mockRepository.update.mockResolvedValue(updateResult);
-    mockRepository.findOne.mockResolvedValue(updatedUser);
+      mockRepository.update.mockResolvedValue(updateResult);
+      mockRepository.findOne.mockResolvedValue(updatedUser);
 
-    const res = await service.update(userId, updateDto);
+      const res = await service.update(userId, updateDto);
 
-    expect(res).toEqual(updatedUser);
-    expect(mockRepository.update).toHaveBeenCalledWith(userId, updateDto);
-    expect(mockRepository.update).toHaveBeenCalledTimes(1);
-    expect(mockRepository.findOne).toHaveBeenCalledWith({ where: { id: userId } });
+      expect(res).toEqual(updatedUser);
+      expect(mockRepository.update).toHaveBeenCalledWith(userId, updateDto);
+      expect(mockRepository.update).toHaveBeenCalledTimes(1);
+      expect(mockRepository.findOne).toHaveBeenCalledWith({
+        where: { id: userId },
+      });
     });
   });
 
@@ -181,7 +184,7 @@ describe('UsersService', () => {
 
       const deleteResult = {
         affected: 1,
-        raw: []
+        raw: [],
       };
 
       mockRepository.delete.mockResolvedValue(deleteResult);
@@ -192,6 +195,5 @@ describe('UsersService', () => {
       expect(mockRepository.delete).toHaveBeenCalledWith(userId);
       expect(mockRepository.delete).toHaveBeenCalledTimes(1);
     });
-  })
-
+  });
 });

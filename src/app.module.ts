@@ -1,4 +1,4 @@
-import * as dotenv from 'dotenv'
+import * as dotenv from 'dotenv';
 dotenv.config();
 
 import * as path from 'path';
@@ -14,10 +14,9 @@ import { ConfigModule } from '@nestjs/config';
 import { ConfigService } from '@nestjs/config';
 import dataBaseConfig from './config/database.config';
 import { I18nModule, AcceptLanguageResolver } from 'nestjs-i18n';
+import { AuthModule } from './modules/auth/auth.module';
 
-
-@Module(
-  {
+@Module({
   imports: [
     ConfigModule.forRoot({
       cache: true,
@@ -28,8 +27,8 @@ import { I18nModule, AcceptLanguageResolver } from 'nestjs-i18n';
         DB_PORT: Joi.number().required(),
         DB_NAME: Joi.string().required(),
         DB_USER: Joi.string().required(),
-        DB_PASS: Joi.string().optional()
-      })
+        DB_PASS: Joi.string().optional(),
+      }),
     }),
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
@@ -42,22 +41,21 @@ import { I18nModule, AcceptLanguageResolver } from 'nestjs-i18n';
         password: config.get<string>('database.password'),
         database: config.get<string>('database.name'),
         autoLoadEntities: true,
-        synchronize: false
+        synchronize: false,
       }),
     }),
     I18nModule.forRoot({
       fallbackLanguage: 'en',
       loaderOptions: {
         path: path.join(process.cwd(), 'src', 'shared', 'i18n'),
-        watch: true
+        watch: true,
       },
-      resolvers: [
-        AcceptLanguageResolver
-      ]
+      resolvers: [AcceptLanguageResolver],
     }),
     UsersModule,
     ClubsModule,
-    ClubStaffModule
+    ClubStaffModule,
+    AuthModule,
   ],
   controllers: [],
   providers: [AppService],

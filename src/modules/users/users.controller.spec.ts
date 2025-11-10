@@ -22,47 +22,49 @@ describe('UsersController', () => {
     createdAt: new Date('2025-01-01T10:00:00Z'),
     updatedAt: new Date('2025-01-01T10:00:00Z'),
     deletedAt: null,
-  }
+  };
 
   const mockService = {
     create: jest.fn(),
     findAll: jest.fn(),
     findOne: jest.fn(),
     update: jest.fn(),
-    delete: jest.fn()
-  }
+    delete: jest.fn(),
+  };
 
- beforeEach( async () => {
-  const module: TestingModule = await Test.createTestingModule({
-    controllers: [UsersController],
-    providers: [{
-      provide: UsersService,
-      useValue: mockService
-    }]
-  }).compile();
+  beforeEach(async () => {
+    const module: TestingModule = await Test.createTestingModule({
+      controllers: [UsersController],
+      providers: [
+        {
+          provide: UsersService,
+          useValue: mockService,
+        },
+      ],
+    }).compile();
 
-  service = module.get<UsersService>(UsersService);
-  controller = module.get<UsersController>(UsersController);
- })
+    service = module.get<UsersService>(UsersService);
+    controller = module.get<UsersController>(UsersController);
+  });
 
- afterEach(() => {
-    jest.clearAllMocks()
+  afterEach(() => {
+    jest.clearAllMocks();
   });
 
   it('should be defined', () => {
-    expect(controller).toBeDefined()
+    expect(controller).toBeDefined();
   });
 
-//  create
+  //  create
 
   describe('create', () => {
     it('should create a new user', async () => {
-      const createUserDto: CreateUserDto =  {
+      const createUserDto: CreateUserDto = {
         firstName: 'Vasyl',
         lastName: 'Pyrig',
         phone: '+48987654321',
         birthday: new Date('2000-01-28').toISOString(),
-        gender: GenderType.MALE
+        gender: GenderType.MALE,
       };
 
       mockService.create.mockResolvedValue(mockUser);
@@ -71,8 +73,8 @@ describe('UsersController', () => {
       expect(res).toEqual(mockUser);
       expect(mockService.create).toHaveBeenCalledWith(createUserDto);
       expect(mockService.create).toHaveBeenCalledTimes(1);
-    })
-  })
+    });
+  });
 
   // findAll
 
@@ -97,7 +99,7 @@ describe('UsersController', () => {
       expect(res).toHaveLength(2);
       expect(service.findAll).toHaveBeenCalledTimes(1);
     });
-  })
+  });
 
   // findOne
 
@@ -111,8 +113,8 @@ describe('UsersController', () => {
       expect(res).toEqual(mockUser);
       expect(mockService.findOne).toHaveBeenCalledWith(userId);
       expect(mockService.findOne).toHaveBeenCalledTimes(1);
-    })
-  })
+    });
+  });
 
   // // update
 

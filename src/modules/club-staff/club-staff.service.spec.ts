@@ -15,10 +15,10 @@ describe('ClubStaffService', () => {
   let repository: Repository<ClubStaff>;
 
   const mockClubStaff = {
-      userId: '550e8400-e29b-41d4-a716-446655440000',
-      status: StatusStaff.ACTIVE,
-      clubId: '534be797-e438-4405-b8a0-3c9359fb8590'
-    };
+    userId: '550e8400-e29b-41d4-a716-446655440000',
+    status: StatusStaff.ACTIVE,
+    clubId: '534be797-e438-4405-b8a0-3c9359fb8590',
+  };
 
   const mockClubStaffsArray = [
     mockClubStaff,
@@ -35,26 +35,29 @@ describe('ClubStaffService', () => {
     findOneBy: jest.fn(),
     save: jest.fn(),
     update: jest.fn(),
-    delete: jest.fn()
-  }
+    delete: jest.fn(),
+  };
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       controllers: [ClubStaffController],
-      providers: [ClubStaffService,
+      providers: [
+        ClubStaffService,
         {
           provide: getRepositoryToken(ClubStaff),
-          useValue: mockRepository
-        }
+          useValue: mockRepository,
+        },
       ],
     }).compile();
 
     service = module.get<ClubStaffService>(ClubStaffService);
-    repository = module.get<Repository<ClubStaff>>(getRepositoryToken(ClubStaff));
+    repository = module.get<Repository<ClubStaff>>(
+      getRepositoryToken(ClubStaff),
+    );
   });
 
   afterEach(() => {
-    jest.clearAllMocks()
+    jest.clearAllMocks();
   });
 
   it('should be defined', () => {
@@ -68,8 +71,8 @@ describe('ClubStaffService', () => {
       const createDto: CreateClubStaffDto = {
         userId: '550e8400-e29b-41d4-a716-446655440000',
         status: StatusStaff.ACTIVE,
-        clubId: '534be797-e438-4405-b8a0-3c9359fb8590'
-      }
+        clubId: '534be797-e438-4405-b8a0-3c9359fb8590',
+      };
 
       mockRepository.save.mockResolvedValue(mockClubStaff);
 
@@ -78,7 +81,7 @@ describe('ClubStaffService', () => {
       expect(mockRepository.save).toHaveBeenLastCalledWith(createDto);
       expect(mockRepository.save).toHaveBeenCalledTimes(1);
     });
-  })
+  });
 
   // find all
 
@@ -92,7 +95,7 @@ describe('ClubStaffService', () => {
       expect(res).toHaveLength(2);
       expect(mockRepository.find).toHaveBeenCalledTimes(1);
     });
-  })
+  });
 
   // find one
 
@@ -102,13 +105,15 @@ describe('ClubStaffService', () => {
 
       mockRepository.findOneBy.mockResolvedValue(mockClubStaff);
 
-      const res = await mockRepository.findOneBy({id: clubStaffId});
+      const res = await mockRepository.findOneBy({ id: clubStaffId });
 
       expect(res).toEqual(mockClubStaff);
-      expect(mockRepository.findOneBy).toHaveBeenCalledWith({id: clubStaffId});
+      expect(mockRepository.findOneBy).toHaveBeenCalledWith({
+        id: clubStaffId,
+      });
       expect(mockRepository.findOneBy).toHaveBeenCalledTimes(1);
     });
-  })
+  });
 
   // update
 
@@ -117,32 +122,32 @@ describe('ClubStaffService', () => {
       const clubStaffId = '534be797-e438-4405-b8a0-3c9359fb8590';
       const updateDto: UpdateClubStaffDto = {
         status: StatusStaff.INACTIVE,
-      }
+      };
 
       const updatedResult = {
         affected: 1,
         raw: [],
-        generatedMaps: []
+        generatedMaps: [],
       };
 
       mockRepository.update.mockResolvedValue(updatedResult);
 
       const res = await mockRepository.update(clubStaffId, updateDto);
-      
+
       expect(res).toEqual(updatedResult);
       expect(repository.update).toHaveBeenCalledWith(clubStaffId, updateDto);
       expect(repository.update).toHaveBeenCalledTimes(1);
     });
-  })
+  });
 
   describe('delete', () => {
     it('should delete a club staff', async () => {
       const clubStaffId = '550e8400-e29b-41d4-a716-446655440000';
-      const res = {deleted: true};
+      const res = { deleted: true };
       mockRepository.delete.mockResolvedValue(res);
 
       await service.delete(clubStaffId);
       expect(mockRepository.delete).toHaveBeenCalledWith(clubStaffId);
     });
-  })
+  });
 });

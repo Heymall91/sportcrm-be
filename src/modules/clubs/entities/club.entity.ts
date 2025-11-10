@@ -1,21 +1,27 @@
-import { ClubStaff } from "src/modules/club-staff/entities/club-staff.entity";
-import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, OneToMany } from "typeorm";
-
+import { ClubStaff } from 'src/modules/club-staff/entities/club-staff.entity';
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  CreateDateColumn,
+  UpdateDateColumn,
+  OneToMany,
+} from 'typeorm';
 
 @Entity()
 export class Club {
-    @PrimaryGeneratedColumn('uuid')
-    id: string;
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
 
-    @Column()
-    name: string;
+  @Column()
+  name: string;
 
-    @OneToMany(() => ClubStaff, clubStaff => clubStaff.club)
-    clubStaff: ClubStaff[];
+  @OneToMany(() => ClubStaff, (clubStaff) => clubStaff.club)
+  clubStaff: ClubStaff[];
 
-    @CreateDateColumn()
-    createdAt: Date;    
+  @CreateDateColumn()
+  createdAt: Date;
 
-    @UpdateDateColumn()
-    updatedAt: Date;
+  @UpdateDateColumn()
+  updatedAt: Date;
 }
