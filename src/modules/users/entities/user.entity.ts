@@ -22,10 +22,10 @@ export class User {
   @Column({nullable: true})
   auth0ID: string;
 
-  @Column()
+  @Column({ nullable: true })
   firstName: string;
 
-  @Column()
+  @Column({ nullable: true })
   lastName: string;
 
   @Column()
@@ -33,22 +33,26 @@ export class User {
 
   @Column({
     unique: true,
+    nullable: true,
   })
   phone: string;
 
   @Column({
     type: 'boolean',
+    default: false,
   })
   isRegistrationCompleted: boolean;
 
   @Column({
     type: 'date',
+    nullable: true,
   })
   birthday: Date;
 
   @Column({
     type: 'enum',
     enum: GenderType,
+    nullable: true,
   })
   gender: GenderType;
 

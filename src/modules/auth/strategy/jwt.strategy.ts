@@ -11,6 +11,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
       secretOrKeyProvider: passportJwtSecret({
         cache: true,
         rateLimit: true,
+        jwksRequestsPerMinute: 5,
         jwksUri: `https://${configService.get('AUTH0_DOMAIN')}/.well-known/jwks.json`,
       }),
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
@@ -21,6 +22,6 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
   }
 
   validate(payload: any) {
-    return { userId: payload.sub, email: payload.email, aud: payload.audience };
+    return { auth0ID: payload.sub, email: payload.email, aud: payload.audience };
   }
 }

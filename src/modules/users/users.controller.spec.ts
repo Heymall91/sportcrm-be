@@ -4,6 +4,10 @@ import { UsersService } from './users.service';
 import { GenderType } from './entities/user.entity';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { AuthService } from '../auth/auth.service';
+import { Auth0Guard } from '../auth/guard/authGuard';
+import { getRepositoryToken } from '@nestjs/typeorm';
+import { User } from './entities/user.entity';
 
 describe('UsersController', () => {
   let controller: UsersController;
@@ -32,6 +36,18 @@ describe('UsersController', () => {
     delete: jest.fn(),
   };
 
+  const mockAuthService = {
+    validateUser: jest.fn().mockResolvedValue({
+      id: 'test-user-id',
+      email: 'test@example.com',
+    }),
+  };
+
+  beforeAll(() => {
+    process.env.AUTH0_AUDIENCE = 'https://test-api';
+    process.env.AUTH0_DOMAIN = 'test.auth0.com';
+  })
+
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       controllers: [UsersController],
@@ -40,8 +56,19 @@ describe('UsersController', () => {
           provide: UsersService,
           useValue: mockService,
         },
+         {
+          provide: AuthService,
+          useValue: mockAuthService,
+        },
+        {
+          provide: getRepositoryToken(User),
+          useValue: mockUser,
+        },
       ],
-    }).compile();
+    })
+    .overrideGuard(Auth0Guard)
+    .useValue({ canActivate: () => true })
+    .compile();
 
     service = module.get<UsersService>(UsersService);
     controller = module.get<UsersController>(UsersController);
@@ -49,6 +76,8 @@ describe('UsersController', () => {
 
   afterEach(() => {
     jest.clearAllMocks();
+    delete process.env.AUTH0_AUDIENCE;
+    delete process.env.AUTH0_DOMAIN;
   });
 
   it('should be defined', () => {
@@ -59,7 +88,7 @@ describe('UsersController', () => {
 
   describe('create', () => {
     it('should create a new user', async () => {
-      const createUserDto: CreateUserDto = {
+      const createUserDto: Partial<CreateUserDto> = {
         firstName: 'Vasyl',
         lastName: 'Pyrig',
         phone: '+48987654321',
@@ -69,7 +98,7 @@ describe('UsersController', () => {
 
       mockService.create.mockResolvedValue(mockUser);
 
-      const res = await controller.create(createUserDto);
+      const res = await controller.create(createUserDto as CreateUserDto);
       expect(res).toEqual(mockUser);
       expect(mockService.create).toHaveBeenCalledWith(createUserDto);
       expect(mockService.create).toHaveBeenCalledTimes(1);

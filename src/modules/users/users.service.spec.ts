@@ -7,6 +7,8 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { Repository } from 'typeorm';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { GenderType } from './entities/user.entity';
+import { AuthService } from '../auth/auth.service';
+import { Auth0Guard } from '../auth/guard/authGuard';
 
 describe('UsersService', () => {
   let service: UsersService;
@@ -57,17 +59,36 @@ describe('UsersService', () => {
     findOneBy: jest.fn(),
   };
 
+  const mockAuthService = {
+    validateUser: jest.fn().mockResolvedValue({
+      id: 'test-user-id',
+      email: 'test@example.com',
+    }),
+  };
+
+  beforeAll(() => {
+    process.env.AUTH0_AUDIENCE = 'https://test-api';
+    process.env.AUTH0_DOMAIN = 'test.auth0.com';
+  })
+
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         UsersService,
+        {
+          provide: AuthService,
+          useValue: mockAuthService,
+        },
         {
           provide: getRepositoryToken(User),
           useValue: mockRepository,
         },
       ],
       controllers: [UsersController],
-    }).compile();
+    })
+    .overrideGuard(Auth0Guard)
+    .useValue({ canActivate: () => true })
+    .compile();
 
     service = module.get<UsersService>(UsersService);
     repository = module.get<Repository<User>>(getRepositoryToken(User));
@@ -75,6 +96,8 @@ describe('UsersService', () => {
 
   afterEach(() => {
     jest.clearAllMocks();
+    delete process.env.AUTH0_AUDIENCE;
+    delete process.env.AUTH0_DOMAIN;
   });
 
   it('should be defined', () => {
@@ -85,7 +108,7 @@ describe('UsersService', () => {
 
   describe('create', () => {
     it('should create a new user', async () => {
-      const createDto: CreateUserDto = {
+      const createDto: Partial<CreateUserDto> = {
         firstName: 'Vasyl',
         lastName: 'Pyrig',
         phone: '+1234567890',
@@ -96,7 +119,7 @@ describe('UsersService', () => {
       };
 
       mockRepository.save.mockResolvedValue(mockUser);
-      const res = await service.create(createDto);
+      const res = await service.create(createDto as CreateUserDto);
 
       expect(res).toEqual(mockUser);
       expect(mockRepository.save).toHaveBeenCalledWith(createDto);

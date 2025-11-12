@@ -6,10 +6,10 @@ import {
   Patch,
   Param,
   Delete,
-  ValidationPipe,
-  UsePipes,
   ParseUUIDPipe,
   HttpCode,
+  UseGuards,
+  UseInterceptors
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -23,6 +23,9 @@ import {
 } from '@nestjs/swagger';
 import { User } from './entities/user.entity';
 import { plainToInstance } from 'class-transformer';
+import { Auth0Guard } from '../auth/guard/authGuard';
+import { UserInterceptor } from '../auth/interceptors/user.interceptor';
+
 
 @ApiTags('users')
 @Controller('users')
@@ -47,6 +50,8 @@ export class UsersController {
   }
 
   @Get(':id')
+  @UseGuards(Auth0Guard)
+  @UseInterceptors(UserInterceptor)
   @ApiOperation({ summary: 'Get user by ID' })
   @ApiParam({
     name: 'id',
@@ -63,6 +68,7 @@ export class UsersController {
   }
 
   @Patch(':id')
+  @UseGuards(Auth0Guard)
   @ApiOperation({ summary: 'Edit/update user by ID' })
   @ApiParam({
     name: 'id',
@@ -84,6 +90,7 @@ export class UsersController {
   }
 
   @Delete(':id')
+  @UseGuards(Auth0Guard)
   @ApiOperation({ summary: 'Deleting user by ID' })
   @ApiParam({
     name: 'id',
