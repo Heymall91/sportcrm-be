@@ -41,6 +41,7 @@ export class CreateUserDto {
 
   @ApiProperty()
   @IsBoolean()
+  @IsOptional()
   isRegistrationCompleted: boolean;
 
   @ApiProperty({ example: '2000-05-12', description: 'Birthday' })

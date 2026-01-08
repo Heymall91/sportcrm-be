@@ -23,8 +23,8 @@ import {
 } from '@nestjs/swagger';
 import { User } from './entities/user.entity';
 import { plainToInstance } from 'class-transformer';
-import { Auth0Guard } from '../auth/guard/authGuard';
 import { UserInterceptor } from '../auth/interceptors/user.interceptor';
+import { Auth0Guard } from '../auth/guard/authGuard';
 
 
 @ApiTags('users')
@@ -33,6 +33,7 @@ export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
   @Post()
+  @UseGuards(Auth0Guard)
   @ApiOperation({ summary: 'Create a new user' })
   @ApiBody({ type: CreateUserDto })
   @ApiResponse({ status: 200, description: 'User has been created' })
@@ -51,7 +52,7 @@ export class UsersController {
 
   @Get(':id')
   @UseGuards(Auth0Guard)
-  @UseInterceptors(UserInterceptor)
+  // @UseInterceptors(UserInterceptor)
   @ApiOperation({ summary: 'Get user by ID' })
   @ApiParam({
     name: 'id',
@@ -84,9 +85,14 @@ export class UsersController {
   async update(
     @Param('id', new ParseUUIDPipe()) id: string,
     @Body() updateUserDto: UpdateUserDto,
-  ): Promise<UpdateUserDto> {
-    const updatedUser = await this.usersService.update(id, updateUserDto);
-    return plainToInstance(UpdateUserDto, updatedUser);
+  ): Promise<User> {
+    try{
+      const updatedUser = await this.usersService.update(id, updateUserDto);
+      return updatedUser;
+    } catch(err){
+      console.error(err);
+      throw err;
+    }
   }
 
   @Delete(':id')

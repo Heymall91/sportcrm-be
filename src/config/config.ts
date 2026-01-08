@@ -8,4 +8,6 @@ export default registerAs('app', () => ({
   port: parseInt(process.env.PORT || '3000', 10),
   globalPrefix: process.env.GLOBAL_PREFIX,
   version: process.env.APP_VERSION,
+  auth0domain: process.env.AUTH0_DOMAIN,
+  auth0audience: process.env.AUTH0_AUDIENCE
 }));

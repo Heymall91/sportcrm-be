@@ -8,7 +8,7 @@ export class AuthService {
   constructor(private usersService: UsersService) {}
 
   async validateUser(auth0Payload: any): Promise<User> {
-    // Map common Auth0 fields into our DTO. Keep optional fields safe if not present.
+
     const auth0Data: Auth0Dto = {
       auth0ID: auth0Payload.sub,
       email: auth0Payload.email,

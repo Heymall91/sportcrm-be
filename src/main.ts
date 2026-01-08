@@ -25,7 +25,12 @@ async function bootstrap() {
   app.useGlobalInterceptors(new ResponseInterceptor());
   app.useGlobalPipes(new ValidationPipe({ transform: true }));
   const frontendOrigin = configService.get('FRONTEND_ORIGIN');
-  app.enableCors({ origin: frontendOrigin, credentials: true });
+  app.enableCors({ 
+    origin: frontendOrigin, 
+    credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
+    allowedHeaders: ['Content-Type', 'Authorization']
+  });
   await app.listen(port ?? 3000);
 }
 bootstrap();
