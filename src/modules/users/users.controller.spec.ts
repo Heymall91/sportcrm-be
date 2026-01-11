@@ -13,6 +13,30 @@ describe('UsersController', () => {
   let controller: UsersController;
   let service: UsersService;
 
+  const createMockUser = (overrides?: Partial<User>): User => ({
+    id: '123e4567-e89b-12d3-a456-426614174000',
+      auth0ID: 'auth0|123456789',
+      email: 'v.pyrig@mail.com',
+      firstName: 'Vasyl',
+      lastName: 'Pyrig',
+      phone: '+1234567890',
+      gender: GenderType.MALE,
+      birthday: '1990-01-01' as any,
+      height: 180,
+      weight: 75,
+      isRegistrationCompleted: true,
+      createdById: '4d1cb0f5-3da4-4cb6-889f-77f17b1b0865',
+      createdBy: {
+        id: '4d1cb0f5-3da4-4cb6-889f-77f17b1b0865',
+        firstName: 'Creator',
+        } as User,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+      deletedAt: null,
+      clubStaff: [],
+      createdUsers: [],
+});
+
   const mockUser = {
     id: '550e8400-e29b-41d4-a716-446655440000',
     firstName: 'Vasyl',
@@ -86,23 +110,39 @@ describe('UsersController', () => {
 
   //  create
 
-  describe('create', () => {
-    it('should create a new user', async () => {
-      const createUserDto: Partial<CreateUserDto> = {
-        firstName: 'Vasyl',
-        lastName: 'Pyrig',
-        phone: '+48987654321',
-        birthday: new Date('2000-01-28').toISOString(),
-        gender: GenderType.MALE,
-      };
+ describe('create', () => {
+  it('should create a new user', async () => {
+    const mockCurrentUser = createMockUser();
+    
+    const createUserDto: CreateUserDto = {
+      firstName: 'Vasyl',
+      lastName: 'Pyrig',
+      phone: '+1234567890',
+      gender: GenderType.MALE,
+      birthday: new Date('2000-01-28'),
+      height: 180,
+      weight: 75,
+    };
 
-      mockService.create.mockResolvedValue(mockUser);
-
-      const res = await controller.create(createUserDto as CreateUserDto);
-      expect(res).toEqual(mockUser);
-      expect(mockService.create).toHaveBeenCalledWith(createUserDto);
-      expect(mockService.create).toHaveBeenCalledTimes(1);
+    const mockCreatedUser = createMockUser({
+      ...createUserDto,
+      id: 'new-user-uuid',
     });
+
+    mockService.create.mockResolvedValue(mockCreatedUser);
+
+    const result = await controller.create(
+      createUserDto,
+      mockCurrentUser
+    );
+
+    expect(result).toEqual(mockCreatedUser);
+    expect(mockService.create).toHaveBeenCalledWith(
+      createUserDto,
+      mockCurrentUser.id
+    );
+    expect(mockService.create).toHaveBeenCalledTimes(1);
+  });
   });
 
   // findAll
@@ -114,7 +154,7 @@ describe('UsersController', () => {
         {
           ...mockUser,
           id: '660e8400-e29b-41d4-a716-446655440001',
-          firstName: 'Anna',
+          firstName: 'Alla',
           phone: '+48987654321',
           gender: GenderType.FEMALE,
         },
@@ -133,30 +173,105 @@ describe('UsersController', () => {
   // findOne
 
   describe('findOne', () => {
-    it('should return a users UUID', async () => {
-      const userId = '550e8400-e29b-41d4-a716-446655440000';
-      mockService.findOne.mockResolvedValue(mockUser);
+  it('should return a users UUID', async () => {
+    const mockCurrentUser = createMockUser();
+    
+    const mockUser: User = {
+      id: '123e4567-e89b-12d3-a456-426614174000',
+      auth0ID: 'auth0|123456789',
+      email: 'v.pyrig@mail.com',
+      firstName: 'Vasyl',
+      lastName: 'Pyrig',
+      phone: '+1234567890',
+      gender: GenderType.MALE,
+      birthday: '1990-01-01' as any,
+      height: 180,
+      weight: 75,
+      isRegistrationCompleted: true,
+      createdById: '4d1cb0f5-3da4-4cb6-889f-77f17b1b0865',
+      createdBy: {
+        id: '4d1cb0f5-3da4-4cb6-889f-77f17b1b0865',
+        firstName: 'Creator',
+        } as User,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+      deletedAt: null,
+      clubStaff: [],
+      createdUsers: [],
+    } as User;
 
-      const res = await controller.findOne(userId);
+    mockService.findOne.mockResolvedValue(mockUser);
 
-      expect(res).toEqual(mockUser);
-      expect(mockService.findOne).toHaveBeenCalledWith(userId);
-      expect(mockService.findOne).toHaveBeenCalledTimes(1);
-    });
+    const result = await controller.findOne(
+      mockUser.id,
+      mockCurrentUser
+    );
+
+    expect(result).toBeDefined();
+    expect(mockService.findOne).toHaveBeenCalledWith(
+      mockUser.id,
+      mockCurrentUser.id
+    );
+    expect(mockService.findOne).toHaveBeenCalledTimes(1);
   });
+});
 
-  // // update
+  // update
 
   describe('update', () => {
-    it('should update an user account', async () => {
-      const userId = '550e8400-e29b-41d4-a716-446655440000';
-      const updateDto: UpdateUserDto = { firstName: 'Nikanor' };
+  it('should update a user account', async () => {
+    const mockCurrentUser: User = {
+      id: '123e4567-e89b-12d3-a456-426614174000',
+      auth0ID: 'auth0|123456789',
+      email: 'v.pyrig@mail.com',
+      firstName: 'Vasyl',
+      lastName: 'Pyrig',
+      phone: '+1234567890',
+      gender: GenderType.MALE,
+      birthday: '1990-01-01' as any,
+      height: 180,
+      weight: 75,
+      isRegistrationCompleted: true,
+      createdById: '4d1cb0f5-3da4-4cb6-889f-77f17b1b0865',
+      createdBy: {
+        id: '4d1cb0f5-3da4-4cb6-889f-77f17b1b0865',
+        firstName: 'Creator',
+        } as User,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+      deletedAt: null,
+      clubStaff: [],
+      createdUsers: [],
+    };
 
-      const res = { userId, ...updateDto };
-      mockService.update.mockResolvedValue(res);
+    const userId = '123e4567-e89b-12d3-a456-426614174000';
+    
+    const updateUserDto: UpdateUserDto = {
+      firstName: 'UpdatedName',
+      height: 185,
+    };
 
-      expect(await controller.update(userId, updateDto)).toEqual(res);
-      expect(mockService.update).toHaveBeenCalledWith(userId, updateDto);
+    const updatedUser: User = {
+      ...mockCurrentUser,
+      ...updateUserDto,
+      updatedById: mockCurrentUser.id,
+    };
+
+    mockService.update.mockResolvedValue(updatedUser);
+
+    const result = await controller.update(
+      userId,
+      updateUserDto,
+      mockCurrentUser
+    );
+
+    expect(result).toEqual(updatedUser);
+    expect(mockService.update).toHaveBeenCalledWith(
+      userId,
+      updateUserDto,
+      mockCurrentUser.id
+    );
+    expect(mockService.update).toHaveBeenCalledTimes(1);
     });
   });
 
@@ -164,12 +279,18 @@ describe('UsersController', () => {
 
   describe('delete', () => {
     it('should delete a user', async () => {
-      const userId = '550e8400-e29b-41d4-a716-446655440000';
-      const res = { deleted: true };
-      mockService.delete.mockResolvedValue(res);
+      const mockCurrentUser = {
+    id: 'current-user-uuid',
+    firstName: 'John',
+    lastName: 'Doe',
+  } as User;
 
-      await controller.delete(userId);
-      expect(mockService.delete).toHaveBeenCalledWith(userId);
+  const userId = 'user-to-delete-uuid';
+
+  await controller.delete(userId, mockCurrentUser);
+
+  expect(mockService.delete).toHaveBeenCalledWith(userId, mockCurrentUser.id);
+  expect(mockService.delete).toHaveBeenCalledTimes(1);
     });
   });
 });

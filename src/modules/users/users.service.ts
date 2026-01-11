@@ -21,6 +21,10 @@ export class UsersService {
     return this.usersRepository.save(newUser);
   }
 
+  async findAll(): Promise<User[]> {
+    return this.usersRepository.find();
+  }
+
   findAllByCreator(creatorId: string) {
     return this.usersRepository.find({
       where: { createdById: creatorId },

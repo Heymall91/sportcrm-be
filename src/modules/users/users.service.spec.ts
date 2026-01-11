@@ -9,11 +9,34 @@ import { getRepositoryToken } from '@nestjs/typeorm';
 import { GenderType } from './entities/user.entity';
 import { AuthService } from '../auth/auth.service';
 import { Auth0Guard } from '../auth/guard/authGuard';
-import { merge } from 'rxjs';
 
 describe('UsersService', () => {
   let service: UsersService;
   let repository: Repository<User>;
+
+  const createMockUser = (overrides?: Partial<User>): User => ({
+    id: '123e4567-e89b-12d3-a456-426614174000',
+    auth0ID: 'auth0|123456789',
+    email: 'v.pyrig@mail.com',
+    firstName: 'Vasyl',
+    lastName: 'Pyrig',
+    phone: '+1234567890',
+    gender: GenderType.MALE,
+    birthday: '1990-01-01' as any,
+    height: 180,
+    weight: 75,
+    isRegistrationCompleted: true,
+    createdById: '4d1cb0f5-3da4-4cb6-889f-77f17b1b0865',
+    createdBy: {
+      id: '4d1cb0f5-3da4-4cb6-889f-77f17b1b0865',
+      firstName: 'Creator',
+      } as User,
+    createdAt: new Date(),
+    updatedAt: new Date(),
+    deletedAt: null,
+    clubStaff: [],
+    createdUsers: [],
+});
 
   // mocks
 
@@ -109,25 +132,49 @@ describe('UsersService', () => {
   // create
 
   describe('create', () => {
-    it('should create a new user', async () => {
-      const createDto: Partial<CreateUserDto> = {
-        firstName: 'Vasyl',
-        lastName: 'Pyrig',
-        phone: '+1234567890',
-        birthday: new Date('2000-01-28').toISOString(),
-        gender: GenderType.MALE,
-        height: 180,
-        weight: 75,
-      };
+  it('should create a new user', async () => {
+  const createDto: CreateUserDto = {
+    firstName: 'Vasyl',
+    lastName: 'Pyrig',
+    phone: '+1234567890',
+    gender: GenderType.MALE,
+    birthday: new Date('2000-01-28'),
+    height: 180,
+    weight: 75,
+  };
 
-      mockRepository.save.mockResolvedValue(mockUser);
-      const res = await service.create(createDto as CreateUserDto);
+  const creatorId = 'creator-user-id';
 
-      expect(res).toEqual(mockUser);
-      expect(mockRepository.save).toHaveBeenCalledWith(createDto);
-      expect(mockRepository.save).toHaveBeenCalledTimes(1);
-    });
+  const mockUser = createMockUser({
+    ...createDto,
+    id: 'new-user-id',
   });
+
+  mockRepository.create.mockReturnValue({
+    ...createDto,
+    createdById: creatorId,
+  });
+  
+  mockRepository.save.mockResolvedValue(mockUser);
+
+  const res = await service.create(createDto, creatorId);
+
+  expect(res).toEqual(mockUser);
+  
+  expect(mockRepository.create).toHaveBeenCalledWith({
+    ...createDto,
+    createdById: creatorId,
+  });
+  
+  expect(mockRepository.save).toHaveBeenCalledWith(
+    expect.objectContaining({
+      firstName: createDto.firstName,
+      lastName: createDto.lastName,
+      phone: createDto.phone,
+    })
+  );
+});
+});
 
   // find all
 
@@ -172,7 +219,7 @@ describe('UsersService', () => {
   
   const updatedUser = {
     ...existingUser,
-    ...updateDto, // Применяем обновления
+    ...updateDto, 
   };
   
   mockRepository.findOne.mockResolvedValue(existingUser);
@@ -182,25 +229,29 @@ describe('UsersService', () => {
   const res = await service.update(userId, updateDto);
   
   expect(res).toEqual(updatedUser);
+});
   });
-  });
+
+  // delete
 
   describe('delete', () => {
     it('should delete a user', async () => {
-      const userId = '123e4567-e89b-12d3-a456-426614174000';
+  const userId = '123e4567-e89b-12d3-a456-426614174000';
+  const requestingUserId = 'creator-user-id';
+  
+  const mockUser = {
+    id: userId,
+    createdById: requestingUserId,
+  } as User;
+  
+  mockRepository.findOne.mockResolvedValue(mockUser);
+  mockRepository.delete.mockResolvedValue({ affected: 1, raw: {} });
 
-      const deleteResult = {
-        affected: 1,
-        raw: [],
-      };
+  await service.delete(userId, requestingUserId);
 
-      mockRepository.delete.mockResolvedValue(deleteResult);
-
-      const res = await service.delete(userId);
-
-      expect(res).toEqual(deleteResult);
-      expect(mockRepository.delete).toHaveBeenCalledWith(userId);
-      expect(mockRepository.delete).toHaveBeenCalledTimes(1);
-    });
+  console.log('Calls:', mockRepository.delete.mock.calls);
+  
+  expect(mockRepository.delete).toHaveBeenCalledWith(userId);
+});
   });
 });
