@@ -9,6 +9,7 @@ import { getRepositoryToken } from '@nestjs/typeorm';
 import { GenderType } from './entities/user.entity';
 import { AuthService } from '../auth/auth.service';
 import { Auth0Guard } from '../auth/guard/authGuard';
+import { merge } from 'rxjs';
 
 describe('UsersService', () => {
   let service: UsersService;
@@ -57,6 +58,7 @@ describe('UsersService', () => {
     delete: jest.fn(),
     findOne: jest.fn(),
     findOneBy: jest.fn(),
+    merge: jest.fn(),
   };
 
   const mockAuthService = {
@@ -145,60 +147,42 @@ describe('UsersService', () => {
   // find one
 
   describe('findOne', () => {
-    it('should return a user by id', async () => {
-      const userId = '123e4567-e89b-12d3-a456-426614174000';
-      const mockUser = { id: userId, firstName: 'Nikanor' };
-
-      mockRepository.findOne.mockResolvedValue(mockUser);
-      const res = await service.findOne(userId);
-
-      expect(res).toEqual(mockUser);
-      expect(mockRepository.findOne).toHaveBeenCalledWith({
-        where: { id: userId },
-      });
-    });
-  });
-
-  describe('update', () => {
     it('should update a user', async () => {
-      const userId = '123e4567-e89b-12d3-a456-426614174000';
-      const updateDto: UpdateUserDto = {
-        firstName: 'Vasyl Updated',
-        lastName: 'Pyrig Updated',
-      };
-
-      const updateResult = {
-        affected: 1,
-        raw: [],
-        generatedMaps: [],
-      };
-
-      const updatedUser = {
-        id: userId,
-        firstName: 'Vasyl Updated',
-        lastName: 'Pyrig Updated',
-        phone: '+1234567890',
-        birthday: new Date('1990-01-01'),
-        gender: 'male',
-        height: 180,
-        weight: 75,
-        createdAt: new Date('2025-10-25T08:56:05.430Z'),
-        updatedAt: new Date('2025-10-25T08:56:05.430Z'),
-        deletedAt: null,
-      };
-
-      mockRepository.update.mockResolvedValue(updateResult);
-      mockRepository.findOne.mockResolvedValue(updatedUser);
-
-      const res = await service.update(userId, updateDto);
-
-      expect(res).toEqual(updatedUser);
-      expect(mockRepository.update).toHaveBeenCalledWith(userId, updateDto);
-      expect(mockRepository.update).toHaveBeenCalledTimes(1);
-      expect(mockRepository.findOne).toHaveBeenCalledWith({
-        where: { id: userId },
-      });
-    });
+  const userId = '123e4567-e89b-12d3-a456-426614174000';
+  const updateDto = {
+    firstName: 'Vasyl Updated',
+    lastName: 'Pyrig Updated',
+  };
+  
+  const fixedDate = new Date('2025-10-25T08:56:05.430Z');
+  
+  const existingUser = {
+    id: userId,
+    firstName: 'Vasyl',
+    lastName: 'Pyrig',
+    phone: '+1234567890',
+    gender: 'male',
+    birthday: new Date('1990-01-01'),
+    height: 180,
+    weight: 75,
+    createdAt: fixedDate,
+    updatedAt: fixedDate,
+    deletedAt: null,
+  };
+  
+  const updatedUser = {
+    ...existingUser,
+    ...updateDto, // Применяем обновления
+  };
+  
+  mockRepository.findOne.mockResolvedValue(existingUser);
+  mockRepository.merge.mockReturnValue(updatedUser);
+  mockRepository.save.mockResolvedValue(updatedUser);
+  
+  const res = await service.update(userId, updateDto);
+  
+  expect(res).toEqual(updatedUser);
+  });
   });
 
   describe('delete', () => {

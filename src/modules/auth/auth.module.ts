@@ -1,5 +1,6 @@
 import { Module, forwardRef } from '@nestjs/common';
 import { PassportModule } from '@nestjs/passport';
+import { UserInterceptor } from './interceptors/user.interceptor';
 import { UsersModule } from '../users/users.module';
 import { AuthService } from './auth.service';
 
@@ -8,7 +9,7 @@ import { AuthService } from './auth.service';
     forwardRef(() => UsersModule),
     PassportModule.register({ defaultStrategy: 'jwt' }),
   ],
-  providers: [AuthService],
-  exports: [AuthService, PassportModule],
+  providers: [AuthService, UserInterceptor],
+  exports: [AuthService, PassportModule, UserInterceptor],
 })
 export class AuthModule {}

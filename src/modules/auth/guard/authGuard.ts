@@ -27,21 +27,25 @@ export class Auth0Guard implements CanActivate {
   }
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
-    const request = context.switchToHttp().getRequest();
-    const response = context.switchToHttp().getResponse();
+  const request = context.switchToHttp().getRequest();
+  const response = context.switchToHttp().getResponse();
 
-    return new Promise((resolve, reject) => {
-      this.checkJwt(request, response, (err: any) => {
-        if (err) {
-          reject(new UnauthorizedException(err.message || 'Invalid token'));
-          return;
-        }
-        if (!request.auth) {
-          reject(new UnauthorizedException('Authentication required'));
-          return;
-        }
-        resolve(true);
-      });
+  return new Promise((resolve, reject) => {
+    this.checkJwt(request, response, (err: any) => {
+      
+      if (err) {
+        reject(new UnauthorizedException(err.message || 'Invalid token'));
+        return;
+      }
+      if (!request.auth) {
+        reject(new UnauthorizedException('Authentication required'));
+        return;
+      }
+      
+      request.auth0ID = request.auth.payload.sub;
+      
+      resolve(true);
     });
-  }
+  });
+}
 }
