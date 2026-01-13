@@ -75,14 +75,7 @@ export class User {
 
   @DeleteDateColumn()
   deletedAt: Date | null;
-
-  @ManyToOne(() => User, { nullable: true })
-  @JoinColumn({ name: 'createdById' })
-  createdBy: User;
   
   @Column({ nullable: true })
   createdById: string;
-
-  @OneToMany(() => User, (user) => user.createdBy)
-  createdUsers: User[];
 }

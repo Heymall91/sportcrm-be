@@ -77,7 +77,7 @@ export class UsersService {
     return await this.usersRepository.delete(id);
   }
 
-  // auth0service
+  // auth0
 
   async findOrCreateByAuth0Id(auth0Data: Auth0Dto): Promise<User> {
     let user = await this.usersRepository.findOne({
