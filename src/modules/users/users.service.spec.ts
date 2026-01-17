@@ -6,7 +6,6 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { Repository } from 'typeorm';
 import { getRepositoryToken } from '@nestjs/typeorm';
-import { GenderType } from './entities/user.entity';
 import { AuthService } from '../auth/auth.service';
 import { Auth0Guard } from '../auth/guard/authGuard';
 
@@ -46,7 +45,6 @@ describe('UsersService', () => {
     lastName: 'Pyrig',
     phone: '+1234567890',
     birthday: new Date('1990-01-01'),
-    gender: GenderType.MALE,
     height: 180,
     weight: 75,
     createdAt: new Date(),
