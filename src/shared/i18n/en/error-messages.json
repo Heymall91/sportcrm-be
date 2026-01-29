@@ -1,0 +1,6 @@
+{
+    "CANNOT_CREATE_MODEL": "can not create model",
+    "CANNOT_FIND_MODEL": "can not find model",
+    "CANNOT_UPDATE_MODEL": "can not update model",
+    "CANNOT_DELETE_MODEL": "can not delete model"
+}
